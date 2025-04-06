@@ -4,7 +4,7 @@ This project is a deep learning-based web application for classifying chicken fe
 
 ### 🔍 Project Overview
 📊 1. **Data Collection**
-Dataset was collected from [Kaggle]([https://www.kaggle.com/](https://www.kaggle.com/datasets/efoeetienneblavo/chicken-disease-dataset)), containing over 8000 labeled images of chicken feces. The four classes include:
+Dataset was collected from [Kaggle](https://www.kaggle.com/](https://www.kaggle.com/datasets/efoeetienneblavo/chicken-disease-dataset)), containing over 8000 labeled images of chicken feces. The four classes include:
 - Coccidiosis
 - Healthy
 - Newcastle Disease
