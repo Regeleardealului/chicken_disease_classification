@@ -63,8 +63,8 @@ st.markdown("""
         margin-top: 2rem;
         box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     }
-    .condition-label { color: #211C84; }
-    .confidence-label { color: #1B4D3E; }
+    .condition-label { color: #FFB22C; }
+    .confidence-label { color: #95D2B3; }
     </style>
     """, unsafe_allow_html=True)
 
