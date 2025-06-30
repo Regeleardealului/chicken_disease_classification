@@ -68,6 +68,9 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
+CONFIDENCE_THRESHOLD = 0.95  # Only show predictions if confidence ≥ 95%
+REJECTION_MESSAGE = "⚠️ This image doesn't appear to be suitable chicken feces for reliable analysis."
+
 # App UI
 st.title('🐔 Disease Prediction')
 st.markdown("Upload an image of chicken feces for health analysis")
@@ -99,14 +102,16 @@ if uploaded_file is not None:
                         3: 'Salmonella'
                     }
                     
-                    st.markdown(f"""
-                    <div class="prediction-box">
-                        <h3>🧪 Analysis Results</h3>
-                        <p><span class="condition-label">Predicted Condition:</span> {class_names.get(predicted_class, "Unknown")}</p>
-                        <p><span class="confidence-label">Confidence Level:</span> {confidence * 100:.2f}%</p>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    
+                    if confidence >= CONFIDENCE_THRESHOLD:
+                        st.markdown(f"""
+                        <div class="prediction-box">
+                            <h3>🧪 Analysis Results</h3>
+                            <p><span class="condition-label">Predicted Condition:</span> {class_names.get(predicted_class, "Unknown")}</p>
+                            <p><span class="confidence-label">Confidence Level:</span> {confidence * 100:.2f}%</p>
+                        </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.warning(REJECTION_MESSAGE)
                 except Exception as e:
                     st.error(f"Prediction failed: {str(e)}")
                     logger.exception("Prediction error")
