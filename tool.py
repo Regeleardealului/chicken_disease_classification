@@ -21,18 +21,21 @@ logger = logging.getLogger(__name__)
 
 # --- MODEL PATH ADJUSTMENT ---
 # Use pathlib to construct the correct path relative to the current script.
-# This is the most reliable way to reference files in Python deployments.
 current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
 model_file_name = "best_vgg_enhanced.keras"
 model_path = current_dir / model_file_name
 
 logger.info(f"Attempting to load model from: {model_path}")
+
+# Initialize model variable globally
+model = None 
+
 # --- END MODEL PATH ADJUSTMENT ---
 
 # Load model with error handling
-# Load model with error handling
 try:
     # Check if the model file is a small LFS pointer file (common Streamlit/GitHub LFS issue)
+    # The actual file size check is a strong diagnostic step.
     if os.path.exists(model_path) and os.path.getsize(model_path) < 1024:
         raise ValueError(f"Model file '{model_file_name}' appears to be a small Git LFS pointer file, not the actual model data.")
     
@@ -104,10 +107,11 @@ if uploaded_file is not None:
             with st.spinner('Analyzing...'):
                 try:
                     # Check if model loaded before predicting
-                    if 'model' not in locals():
+                    # A globális 'model' változót ellenőrizzük: ha még mindig None (azaz nem töltődött be), leállítjuk.
+                    if model is None: 
                         st.error("The AI model is unavailable for prediction.")
-                        return
-
+                        st.stop() # Helyes Streamlit futásmegszakítás
+                        
                     predictions = model.predict(img_array)
                     predicted_class = np.argmax(predictions[0])
                     confidence = np.max(predictions[0])
