@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 # Get the correct file path for Streamlit Cloud
 #current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
 #model_path = current_dir / "best_vgg_enhanced.keras"
-model_path = "best_vgg_enhanced.keras"
+model_path = "./best_vgg_enhanced.keras"
 
 # Load model with error handling
 try:
