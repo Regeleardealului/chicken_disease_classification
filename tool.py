@@ -6,6 +6,7 @@ import numpy as np
 from PIL import Image
 from pathlib import Path
 import logging
+import os # Added os for potential troubleshooting
 
 # 🚨 Page configuration must be the first Streamlit command
 st.set_page_config(
@@ -18,14 +19,25 @@ st.set_page_config(
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Get the correct file path for Streamlit Cloud
-#current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
-#model_path = current_dir / "best_vgg_enhanced.keras"
-model_path = "./best_vgg_enhanced.keras"
+# --- MODEL PATH ADJUSTMENT ---
+# Use pathlib to construct the correct path relative to the current script.
+# This is the most reliable way to reference files in Python deployments.
+current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
+model_file_name = "best_vgg_enhanced.keras"
+model_path = current_dir / model_file_name
+
+logger.info(f"Attempting to load model from: {model_path}")
+# --- END MODEL PATH ADJUSTMENT ---
 
 # Load model with error handling
+# Load model with error handling
 try:
+    # Check if the model file is a small LFS pointer file (common Streamlit/GitHub LFS issue)
+    if os.path.exists(model_path) and os.path.getsize(model_path) < 1024:
+        raise ValueError(f"Model file '{model_file_name}' appears to be a small Git LFS pointer file, not the actual model data.")
+    
     K.clear_session()  # Clear previous sessions
+    # Keras will handle the correct path format regardless of the OS when using pathlib's output
     model = load_model(model_path)
     logger.info("Model loaded successfully")
 except Exception as e:
@@ -91,6 +103,11 @@ if uploaded_file is not None:
         if st.button('Analyze Image'):
             with st.spinner('Analyzing...'):
                 try:
+                    # Check if model loaded before predicting
+                    if 'model' not in locals():
+                        st.error("The AI model is unavailable for prediction.")
+                        return
+
                     predictions = model.predict(img_array)
                     predicted_class = np.argmax(predictions[0])
                     confidence = np.max(predictions[0])
