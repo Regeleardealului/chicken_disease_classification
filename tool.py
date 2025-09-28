@@ -4,9 +4,15 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras import backend as K
 import numpy as np
 from PIL import Image
-import os
 from pathlib import Path
 import logging
+
+# 🚨 Page configuration must be the first Streamlit command
+st.set_page_config(
+    page_title='Poultry Health Analyzer',
+    page_icon='virus.png',
+    layout='wide'
+)
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -24,13 +30,6 @@ try:
 except Exception as e:
     logger.error(f"Model loading failed: {str(e)}")
     st.error("Failed to load the AI model. Please check the logs.")
-
-# Page configuration
-st.set_page_config(
-    page_title='Poultry Health Analyzer',
-    page_icon='virus.png',
-    layout='wide'
-)
 
 # Custom CSS
 st.markdown("""
