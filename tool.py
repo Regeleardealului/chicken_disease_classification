@@ -21,11 +21,11 @@ logger = logging.getLogger(__name__)
 
 # --- MODEL PATH ADJUSTMENT ---
 # Use pathlib to construct the correct path relative to the current script.
-current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
-model_file_name = "best_vgg_enhanced.keras"
-model_path = current_dir / model_file_name
+#current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
+#model_file_name = "best_vgg_enhanced.keras"
+#model_path = current_dir / model_file_name
 
-logger.info(f"Attempting to load model from: {model_path}")
+#logger.info(f"Attempting to load model from: {model_path}")
 
 # Initialize model variable globally
 model = None 
@@ -41,7 +41,7 @@ try:
     
     K.clear_session()  # Clear previous sessions
     # Keras will handle the correct path format regardless of the OS when using pathlib's output
-    model = load_model(model_path)
+    model = load_model("best_vgg_enhanced.keras")
     logger.info("Model loaded successfully")
 except Exception as e:
     logger.error(f"Model loading failed: {str(e)}")
